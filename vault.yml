@@ -1,0 +1,56 @@
+---
+# File vault.yml
+
+- hosts: localhost
+  vars:
+    vault_version: 0.6.2
+
+  tasks:
+  - name: import the Hashicorp PGP key
+    apt_key:
+      url: https://keybase.io/hashicorp/key.asc 
+      id: 51852D87348FFC4C
+      state: present
+    become: true
+
+  - name: export Hashicorp PGP key to hashicorp.asc
+    shell: "apt-key export 51852D87348FFC4C > {{ playbook_dir }}/hashicorp.asc"
+    args:
+      creates: "{{ playbook_dir }}/hashicorp.asc"
+
+  - name: import the Hashicorp PGP key to GPG
+    shell: "gpg --import {{ playbook_dir }}/hashicorp.asc > {{ playbook_dir }}/gpg_import.info 2>&1"
+    args:
+      creates: "{{ playbook_dir }}/gpg_import.info" 
+
+  - name: download Hashicorp Vault {{ vault_version }} binary zip 
+    get_url:
+      url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip" 
+      dest: "{{ playbook_dir }}/vault_{{ vault_version }}_linux_amd64.zip"
+
+  - name: download Hashicorp Vault {{ vault_version }} SHASUM file
+    get_url:
+      url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_SHA256SUMS"
+      dest: "{{ playbook_dir }}/vault_{{ vault_version }}_SHA256SUMS"
+
+  - name: download Hashicorp Vault {{ vault_version }} SHASUM.sig file
+    get_url:
+      url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_SHA256SUMS.sig"
+      dest: "{{ playbook_dir }}/vault_{{ vault_version }}_SHA256SUMS.sig"
+
+  - name: verify the signature file is untampered
+    shell: "gpg --verify vault_{{ vault_version }}_SHA256SUMS.sig vault_{{ vault_version }}_SHA256SUMS > {{ playbook_dir }}/verify_signature.info 2>&1"
+    args:
+      creates: "{{ playbook_dir }}/verify_signature.info"
+ 
+  - name: verify the SHASUM matches the binary
+    shell: "sha256sum -c vault_{{ vault_version }}_SHA256SUMS --ignore-missing > {{ playbook_dir }}/verify_binary.info 2>&1"
+    args:
+      creates: "{{ playbook_dir }}/verify_binary.info"
+
+  - name: unzip verified Hashicorp Vault {{ vault_version }} to docker folder
+    unarchive:
+      src: "{{ playbook_dir }}/vault_{{ vault_version }}_linux_amd64.zip"
+      dest: "{{ playbook_dir }}/docker"
+      creates: "{{ playbook_dir }}/docker/vault"
+      mode: 0755

@@ -1,0 +1,11 @@
+# Ansible retry files
+*.retry
+
+# Hashicorp binary zip file and binary file
+*.zip
+vault
+
+# Hashicorp imported/generated key files
+*SHA256SUMS*
+hashicorp.asc
+*.info

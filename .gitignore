@@ -9,3 +9,6 @@ vault
 *SHA256SUMS*
 hashicorp.asc
 *.info
+
+# Idea Files
+.idea/

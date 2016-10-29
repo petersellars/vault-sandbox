@@ -15,8 +15,7 @@ to its use in the [Docker][2] container.
 ```docker run -d -p 8200:8200 --hostname vault --name vault cato1971/vault```
 
 ### Using the container
-To run the container we need to export the vault ipaddress. Using ```docker inspect -f '{{ .NetworkSettings.IPAddress }}' vault```
-will provide the vault container ip address
+To run the container we need to export the vault ipaddress. Using ```docker inspect -f '{{ .NetworkSettings.IPAddress }}' vault``` will provide the vault container ip address
 
 ```export VAULT_ADDR='http://X.X.X.X:8200'```
 

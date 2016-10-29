@@ -9,6 +9,7 @@ RUN apk update && apk add openssl ca-certificates && rm -rf /var/cache/apk/*
 
 # Unzip a verified version of vault and set permissions
 COPY vault /bin/vault
+COPY policy.json policy.json 
 
 EXPOSE 8200
 VOLUME "/config"

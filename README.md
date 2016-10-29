@@ -31,6 +31,11 @@ docker run -it --rm -e VAULT_ADDR --entrypoint=/bin/sh cato1971/vault \
   -c "vault auth $VAULT_TOKEN; vault write secret/hello value=world"
 ``` 
 
+#### Using a Bash Wrapper Script to run the container
+Copy the [vault.sh](./vault.sh) file to sources in your ```.bashrc``` file using the following command:
+
+```source /path/to/vault.sh```
+
 ### TO-DO
 * Create Docker Container containing the verified binary implementaion of [Vault][1]
 * Create GPG module for importing and verifying using keys

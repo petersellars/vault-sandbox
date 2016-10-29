@@ -22,11 +22,12 @@ will provide the vault container ip address
 
 Run ```docker logs vault``` to obtain your vault root token and then export it too:
 
-```export VAULT_TOKEN=PASTE_YOUR_TOKEN_HERE
+```export VAULT_TOKEN=PASTE_YOUR_TOKEN_HERE```
 
 Then to run the container you can use the following command as an example:
 
-```docker run -it --rm -e VAULT_ADDR --entrypoint=/bin/sh cato1971/vault -c "vault auth $VAULT_TOKEN; vault write secret/hello value=world"``` 
+```docker run -it --rm -e VAULT_ADDR --entrypoint=/bin/sh cato1971/vault \
+  -c "vault auth $VAULT_TOKEN; vault write secret/hello value=world"``` 
 
 ### TO-DO
 * Create Docker Container containing the verified binary implementaion of [Vault][1]
